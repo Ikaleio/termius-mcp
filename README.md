@@ -20,7 +20,21 @@ login, RNCryptor v3 and Sodium v4/v5, `v4/terminal/sync/`).
 
 ## Install
 
-Python 3.9+ is required. On Debian/Ubuntu (PEP 668) use a venv or `pipx`.
+Python 3.9+ is required.
+The PyPI name is `termius-mcp`. The official Termius CLI already uses `termius`.
+After install, the command is still `termius`.
+
+```bash
+pip install termius-mcp
+```
+
+On Debian/Ubuntu (PEP 668) use a venv or `pipx`:
+
+```bash
+pipx install termius-mcp
+```
+
+From a git clone:
 
 ```bash
 python3 -m venv ~/.local/share/termius-mcp

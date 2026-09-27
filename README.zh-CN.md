@@ -14,7 +14,21 @@
 
 ## 安装
 
-需要 Python 3.9+。在 Debian/Ubuntu（PEP 668）上使用 venv 或 `pipx`。
+需要 Python 3.9+。
+PyPI 包名是 `termius-mcp`。官方 Termius CLI 已经占用 `termius`。
+安装后，命令仍是 `termius`。
+
+```bash
+pip install termius-mcp
+```
+
+在 Debian/Ubuntu（PEP 668）上使用 venv 或 `pipx`：
+
+```bash
+pipx install termius-mcp
+```
+
+从 git clone 安装：
 
 ```bash
 python3 -m venv ~/.local/share/termius-mcp

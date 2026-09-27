@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+import re
+from pathlib import Path
+
 from setuptools import setup, find_packages
 
-from termius import __version__
 
+def _version():
+    text = Path('termius/__init__.py').read_text(encoding='utf-8')
+    match = re.search(r"^__version__ = '([^']+)'", text, re.M)
+    if not match:
+        raise RuntimeError('Cannot read version from termius/__init__.py')
+    return match.group(1)
 
-cli_command_name = 'termius'
 
 requires = [
     'requests>=2.7.0',
@@ -21,23 +28,24 @@ requires = [
 
 
 def get_long_description():
-    try:
-        import pypandoc
-        return pypandoc.convert('README.md', 'rst')
-    except (IOError, ImportError):
-        with open('README.md') as handle:
-            return handle.read()
+    with open('README.md', encoding='utf-8') as handle:
+        return handle.read()
 
 
 setup(
-    name='termius',
-    version=__version__,
+    name='termius-mcp',
+    version=_version(),
     license='BSD',
-    author='Termius Corporation',
-    author_email='hello@termius.com',
+    author='MiaM1ku',
+    author_email='61079068+MiaM1ku@users.noreply.github.com',
     url='https://github.com/MiaM1ku/termius-mcp',
+    project_urls={
+        'Source': 'https://github.com/MiaM1ku/termius-mcp',
+        'Issues': 'https://github.com/MiaM1ku/termius-mcp/issues',
+    },
     description='Termius Cloud MCP server.',
     long_description=get_long_description(),
+    long_description_content_type='text/markdown',
     keywords=['termius', 'mcp'],
     packages=find_packages(exclude=['tests']),
     install_requires=requires,
@@ -58,7 +66,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            '{} = termius.main:main'.format(cli_command_name)
+            'termius = termius.main:main',
+            'termius-mcp = termius.main:main',
         ],
     },
 )
