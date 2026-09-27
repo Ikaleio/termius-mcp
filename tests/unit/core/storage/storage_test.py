@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import tempfile
 from six import integer_types
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 from unittest import TestCase
 from termius.core.models.terminal import (
     Host, SshConfig, Identity, SshKey, Group

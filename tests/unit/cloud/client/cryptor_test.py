@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from os import urandom
 from base64 import b64decode
-from nose.tools import eq_, ok_, raises
+import pytest
 from itertools import product
 from unittest import TestCase
 
@@ -25,7 +25,7 @@ def test_dual_encrypt_and_decrypt():
 def dual_encrypt_decrypt_text(cryptor, original_text):
     ciphertext = cryptor.encrypt(original_text)
     text = cryptor.decrypt(ciphertext)
-    eq_(text, original_text)
+    assert text == original_text
 
 
 def test_encrypt_and_decrypt():
@@ -50,20 +50,20 @@ def test_encrypt_and_decrypt():
 def encrypt_decrypt_text(cryptor, original_text, original_ciphertext):
     text = cryptor.decrypt(original_ciphertext)
     ciphertext = cryptor.encrypt(text)
-    eq_(text, original_text)
-    ok_(ciphertext != original_ciphertext)
+    assert text == original_text
+    assert ciphertext != original_ciphertext
 
 
-@raises(TypeError)
 def test_encrypt_none():
     cryptor = generate_cryptor(**config_factory('pass'))
-    cryptor.encrypt(None)
+    with pytest.raises(TypeError):
+        cryptor.encrypt(None)
 
 
-@raises(CryptorException)
 def test_decrypt_none():
     cryptor = generate_cryptor(**config_factory('pa$$'))
-    cryptor.decrypt(None)
+    with pytest.raises(CryptorException):
+        cryptor.decrypt(None)
 
 
 def generate_cryptor(password, encryption_salt, hmac_salt):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import tempfile
 from pathlib2 import Path
-from mock import Mock
-from nose.tools import eq_
+from unittest.mock import Mock
+
 from ....core.storage.storage_test import StrategyCase
 from ..cryptor_test import generate_cryptor, config_factory
 from termius.cloud.client.transformers.many import (
@@ -113,13 +113,13 @@ class BulkTransformerTest(StrategyCase):
                 }
             ]
         })
-        eq_(host.label, self.cryptor.decrypt(
+        self.assertEqual(host.label, self.cryptor.decrypt(
             payload['host_set'][0]['label']
         ))
-        eq_(ssh_key.label, self.cryptor.decrypt(
+        self.assertEqual(ssh_key.label, self.cryptor.decrypt(
             payload['sshkeycrypt_set'][0]['label']
         ))
-        eq_(identity.label, self.cryptor.decrypt(
+        self.assertEqual(identity.label, self.cryptor.decrypt(
             payload['identity_set'][0]['label']
         ))
 
@@ -180,7 +180,7 @@ class BulkTransformerTest(StrategyCase):
             'pfrule_set': [],
             'delete_sets': {},
         })
-        eq_(host.label, self.cryptor.decrypt(
+        self.assertEqual(host.label, self.cryptor.decrypt(
             payload['host_set'][0]['label']
         ))
 

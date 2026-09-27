@@ -1,37 +1,34 @@
 # -*- coding: utf-8 -*-
 import os
-from mock import Mock
+from unittest.mock import Mock
 from pathlib2 import Path
-from nose.tools import assert_raises, eq_, with_setup
 from six.moves import configparser
+from unittest import TestCase
+
 from termius.core.settings import Config
 
 
-def clean_tmp_config():
-    os.remove(str(Path('/tmp/config')))
+class ConfigGetSafeTest(TestCase):
+    def tearDown(self):
+        path = Path('/tmp/config')
+        if path.is_file():
+            os.remove(str(path))
 
+    def test_get_safe_with_nooption(self):
+        config = get_config()
+        default = False
+        falled_back = config.get_safe('User', 'key', default=default)
+        self.assertEqual(falled_back, default)
 
-@with_setup(teardown=clean_tmp_config)
-def test_get_safe_with_nooption():
-    config = get_config()
-    default = False
-    falled_back = config.get_safe('User', 'key', default=default)
-    eq_(falled_back, default)
+    def test_get_safe_with_general_error(self):
+        config = get_config()
+        with self.assertRaises(TypeError):
+            config.get_safe()
 
-
-@with_setup(teardown=clean_tmp_config)
-def test_get_safe_with_general_error():
-    config = get_config()
-    with assert_raises(TypeError):
-        config.get_safe()
-
-
-@with_setup(teardown=clean_tmp_config)
-def test_get_with_nooption():
-    config = get_config()
-
-    with assert_raises(configparser.NoSectionError):
-        config.get('User', 'key')
+    def test_get_with_nooption(self):
+        config = get_config()
+        with self.assertRaises(configparser.NoSectionError):
+            config.get('User', 'key')
 
 
 def get_config():

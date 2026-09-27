@@ -1,6 +1,6 @@
 # Copyright (c) 2020 Termius Corporation.
 import pytest
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 
 from termius.core.api import API
 from termius.core.exceptions import ApiError, OutdatedVersion

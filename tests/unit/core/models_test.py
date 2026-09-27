@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
+import tempfile
 
 import six
-from mock import patch, Mock
+from unittest.mock import patch, Mock
+from pathlib2 import Path
 
 from termius.core.models.base import Model
 from termius.core.models.terminal import (
@@ -10,7 +12,6 @@ from termius.core.models.terminal import (
 )
 
 from termius.core.storage import ApplicationStorage
-
 
 class ModelsTest(TestCase):
     def test_generator(self):
@@ -32,10 +33,12 @@ class ModelsTest(TestCase):
 
     @patch('termius.core.storage.PersistentDict')
     def save(self, model, mocked):
-
-        storage = ApplicationStorage(Mock(**{
-            'app.directory_path.return_value': 'TestCase'
-        }))
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        command = Mock()
+        command.directory_path = tmp.name
+        command.config.ssh_key_dir_path = Path(tmp.name)
+        storage = ApplicationStorage(command)
         with storage:
             saved_model = storage.save(model)
 

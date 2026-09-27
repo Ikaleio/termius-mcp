@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U pip setuptools
-          pip install pytest pytest-cov coverage mock nose
+          pip install pytest pytest-cov coverage
       - name: Build
         run: pip install -U -e .
       - name: Run tests
