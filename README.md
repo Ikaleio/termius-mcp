@@ -1,14 +1,19 @@
 # Termius MCP
 
+[English](README.md) · [简体中文](README.zh-CN.md)
+
 stdio MCP server for [Termius](https://termius.com/) Cloud.
 
 Repository: [MiaM1ku/termius-mcp](https://github.com/MiaM1ku/termius-mcp).
 
-`termius` is not a human CLI. An MCP client starts the binary with no args.
-The process speaks newline-delimited JSON-RPC on stdin/stdout (MCP stdio).
-It negotiates `protocolVersion` `2025-11-25` or `2025-06-18` (echoes the
-client when supported). Login, vault sync, host lookup, SSH exec, and SFTP
-file transfer are tools.
+`termius` with no arguments is the MCP server. An MCP client starts that
+binary with no args. The process speaks newline-delimited JSON-RPC on
+stdin/stdout (MCP stdio). It negotiates `protocolVersion` `2025-11-25` or
+`2025-06-18` (echoes the client when supported). Login, vault sync, host
+lookup, SSH exec, and SFTP file transfer are tools.
+
+`termius login` signs in from a terminal. Use it for Google SSO, email and
+password, and OTP.
 
 This tree talks to **Termius desktop 10.0.6** APIs (DeviceToken, SRP / gRPC
 login, RNCryptor v3 and Sodium v4/v5, `v4/terminal/sync/`).
@@ -25,6 +30,7 @@ ln -sf ~/.local/share/termius-mcp/bin/termius ~/.local/bin/termius
 ```
 
 Point the MCP client at that binary. Do not pass `mcp` or other args.
+Do not pass `login` in the MCP client `args` list.
 
 Claude / generic (`contrib/mcp/termius.mcp.json`):
 
@@ -64,8 +70,8 @@ Pi / OMP (`~/.omp/agent/mcp.json`):
 ```
 
 Restart the MCP client after you edit the config. `connecting [stdio]` is the
-handshake. It becomes connected when `initialize` succeeds. Login happens
-after that, through tools.
+handshake. It becomes connected when `initialize` succeeds. Sign in with
+`termius login` before that, or use the login tools after connect.
 
 Optional environment variables:
 
@@ -76,7 +82,58 @@ Optional environment variables:
 
 ## First-time setup
 
-There is no setup wizard. After the server is connected, use the tools.
+Sign in from a terminal, then start the MCP client.
+
+### Terminal login
+
+```bash
+termius login
+```
+
+The command prompts for `google` or `email` when stdin is a TTY.
+You can also pass the method:
+
+```bash
+termius login google
+termius login email -u you@example.com
+```
+
+Google:
+
+1. Open the printed `https://account.termius.com/sso/desktop?...` URL.
+2. Sign in with Google.
+3. When the page tries to open Termius, copy
+   `termius://app/continue-sso?...`.
+4. Paste that URL.
+5. Enter the vault encryption password from the Termius app. This is not
+   the Google password.
+6. If 2FA is on, enter the OTP.
+
+Email:
+
+1. Enter the Termius email if you did not pass `-u`.
+2. Enter the vault / account password.
+3. If 2FA is on, enter the OTP.
+
+`TERMIUS_VAULT_PASSWORD` supplies the vault password and skips the prompt.
+Default remember writes `~/.termius/vault` mode `0600`. Pass `--no-remember`
+to skip that file.
+
+Check the session:
+
+```bash
+termius status
+```
+
+Sign out:
+
+```bash
+termius logout
+```
+
+### MCP tools
+
+After the server is connected, you can also use the tools.
 
 If `~/.termius/config` already has a DeviceToken (a previous login):
 
@@ -87,7 +144,7 @@ If `~/.termius/config` already has a DeviceToken (a previous login):
 3. Call `hosts`. Later reads auto-pull when the cache is older than
    `TERMIUS_SYNC_TTL`.
 
-If this machine has never signed in:
+If this machine has never signed in and you are not using `termius login`:
 
 1. Call `status`. Expect `logged_in: false`.
 2. Google: call `login` with `method=google`. Open the returned URL. Sign in.
