@@ -138,14 +138,14 @@ class CryptorV2Test(TestCase):
         cryptor.encrypt(expected_result)
 
         res_web = cryptor.decrypt(encrypted_by_web_value)
-        self.assertEquals(expected_result, res_web)
+        self.assertEqual(expected_result, res_web)
 
         if should_faild:
             with self.assertRaises(CryptorException):
                 resIos = cryptor.decrypt(encrypted_by_ios_value)
         else:
             resIos = cryptor.decrypt(encrypted_by_ios_value)
-            self.assertEquals(expected_result, resIos)
+            self.assertEqual(expected_result, resIos)
 
     def generate_cryptor(self, password):
         return generate_cryptor(password, self.encryption_salt, self.hmac_salt)
@@ -199,7 +199,7 @@ class CryptorV3Test(TestCase):
         cryptor.encrypt(expected_result)
 
         res = cryptor.decrypt(encrypted_value)
-        self.assertEquals(expected_result, res)
+        self.assertEqual(expected_result, res)
 
     def generate_cryptor(self, password):
         return generate_cryptor(password, self.encryption_salt, self.hmac_salt)

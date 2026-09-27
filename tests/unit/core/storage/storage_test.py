@@ -226,16 +226,16 @@ class RelatedStrategyCase(StrategyCase):
         for _ in range(2):
             self.test_save_strategy()
 
-        self.assertEquals(
+        self.assertEqual(
             groups_count_before + 1, len(self.storage.get_all(Group))
         )
-        self.assertEquals(
+        self.assertEqual(
             keys_count_before + 1, len(self.storage.get_all(SshKey))
         )
-        self.assertEquals(
+        self.assertEqual(
             identities_count_before + 1, len(self.storage.get_all(Identity))
         )
-        self.assertEquals(
+        self.assertEqual(
             hosts_count_before + 1, len(self.storage.get_all(Host))
         )
 
